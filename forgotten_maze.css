@@ -1,0 +1,20 @@
+body {
+	background-color: #160F29;
+	color: #246A73;
+}
+
+header, footer {
+	text-align: center;
+}
+
+canvas {
+	border: 1px solid #368F8B;
+}
+
+.game {
+	text-align: center;
+}
+
+img {
+	display: none;
+}

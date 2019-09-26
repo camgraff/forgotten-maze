@@ -2,8 +2,32 @@
 <html>
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta charset="utf-8"/>
+		<link rel="stylesheet" href="forgotten_maze.css">
+		<script type="text/javascript" src="forgotten_maze.js"></script>
 	</head>
-	<body onload="startGame()">
-		<canvas>
+
+	<body> 
+
+		<header>
+			<h1> The Forgotten Maze </h1>
+		</header>
+
+		<section>
+			<article>
+
+				<img id="maze" width="284" height="177" src="images/maze.jpeg" alt="Menu Background">
+				<img id="floor" width="300" height="150" src="images/floor.jpeg" alt="Game Floor">
+
+				<div class="game">
+					<canvas id="forgotten_maze" width=750 height=500></canvas>
+				</div>
+
+			</article>
+		</section>
+
+		<footer>
+			<h3> Created by: Jeffrey Stenerson, Jerry Bui, and Cameron Graff </h6>
+		</footer>
 	</body>
 </html>
