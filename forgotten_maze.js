@@ -4,6 +4,8 @@ var game;
 var on_menu = true;
 var x;
 var y;
+var start_time = 2;
+var seconds = mins * 60;
 
 var GAME_SIZE = 25;
 var walls = [];
@@ -37,8 +39,8 @@ var forgotten_maze = {
 // Game Class
 function game() {
     var img = document.getElementById("floor");
-    x = 100;
-    y = 100;
+    x = 25;
+    y = 25;
   
     this.update = function() {
 
@@ -63,12 +65,34 @@ function game() {
 
         forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
         walls.push([50, 50, 150, 75]);
-
     }
 
 }
 
-// Manu Class
+// mazeGenerator possibility:
+// canvas: (width: 750, height: 500)
+function newMaze(){
+    var x_array = canvas.width/25
+    var y_array = canvas.height/25
+    var cells = newArray();
+    var unvis = newArray();
+    for (var i = 0; i < x_array; i++){
+        cells[i] = newArray();
+        unvis[i] = newArray();
+        for (var j = 0; j < y_array; i++){
+            cells[i][j] = 0;
+            unvis[i][j] = true;
+        }
+    }
+}
+
+// Timer Functions:
+function countdown(){
+    setTimeout('Decrement()', 60);
+
+}
+
+// Menu Class
 function menu() {
 
     var img = document.getElementById("maze");
@@ -285,7 +309,7 @@ function checkCollision(direction) {
             if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
                 return true;
             }
-            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
+            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE <= walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
                 return true;
             }
             if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + (GAME_SIZE/2) > walls[i][1] && y + (GAME_SIZE/2) < walls[i][3]) {
