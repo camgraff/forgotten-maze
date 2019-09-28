@@ -3,15 +3,12 @@ var menu;
 var game;
 var x;
 var y;
+
+// Timing variables
 var time = 120;
 var time_left = "";
-var min = 0;
-var sec = 0;
-var time_left_alpha = "Time Left: ";
-var min_left = "";
-var sec_left = "";
-var colon = ":";
 
+// Game Variables
 var GAME_SIZE = 25;
 var on_menu = true;
 var score = 0;
@@ -49,30 +46,23 @@ var forgotten_maze = {
 // Game Class
 function game() {
     var img = document.getElementById("floor");
-<<<<<<< Updated upstream
-    x = 25;
-    y = 25;
-=======
     var coin = document.getElementById("coin");
     x = 25;
     y = 25;
 
     drawCoins();
   
->>>>>>> Stashed changes
     this.update = function() {
         
         // Background image
         forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
             0, 0, canvas.width, canvas.height);
 
-<<<<<<< Updated upstream
         // Draw Player
         forgotten_maze.context.fillStyle = "#FFFFFF";
         forgotten_maze.context.fillRect(x, y, 25, 25);
         
-=======
->>>>>>> Stashed changes
+
         // Draw outside walls
         forgotten_maze.context.fillStyle = "#000000";
         forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);                                         // Top wall
@@ -88,32 +78,6 @@ function game() {
         forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
         walls.push([50, 50, 150, 75]);
 
-<<<<<<< Updated upstream
-        // Draw Time
-        forgotten_maze.context.fillStyle = "#FFFFFF";
-        forgotten_maze.context.font = "15px Arial";
-        forgotten_maze.context.textAlign = "left";
-        forgotten_maze.context.fillText(timing(), 25, 20);
-    }
-
-}
-
-// mazeGenerator possibility:
-// canvas: (width: 750, height: 500)
-function newMaze(){
-    var x_array = canvas.width/25
-    var y_array = canvas.height/25
-    var cells = newArray();
-    var unvis = newArray();
-    for (var i = 0; i < x_array; i++){
-        cells[i] = newArray();
-        unvis[i] = newArray();
-        for (var j = 0; j < y_array; i++){
-            cells[i][j] = 0;
-            unvis[i][j] = true;
-        }
-=======
-
         // Draw Coins
         for (var i = 0; i < coins.length; i++) {
             if (coins[i][2] == 1) {
@@ -121,25 +85,53 @@ function newMaze(){
             }
         }
 
+        // Draw Time
+        forgotten_maze.context.fillStyle = "#FFFFFF";
+        forgotten_maze.context.font = "15px Arial";
+        forgotten_maze.context.textAlign = "left";
+        forgotten_maze.context.fillText(time_left, 25, 20);
+
         // Draw Score
         forgotten_maze.context.fillStyle = "#FFFFFF";
         forgotten_maze.context.font = "15px Arial";
-        forgotten_maze.context.fillText("Score: ", 600, 20);
-        forgotten_maze.context.fillText(score, 650, 20);
+        forgotten_maze.context.fillText("Score: ", 650, 20);
+        forgotten_maze.context.fillText(score, 700, 20);
 
         // Draw Player
         drawPlayer(forgotten_maze.context);
-
->>>>>>> Stashed changes
     }
+
 }
 
+// mazeGenerator possibility:
+// canvas: (width: 750, height: 500)
+// function newMaze(){
+//     var x_array = canvas.width/25
+//     var y_array = canvas.height/25
+//     var cells = newArray();
+//     var unvis = newArray();
+//     for (var i = 0; i < x_array; i++){
+//         cells[i] = newArray();
+//         unvis[i] = newArray();
+//         for (var j = 0; j < y_array; i++){
+//             cells[i][j] = 0;
+//             unvis[i][j] = true;
+//         }
+
+//     }
+// }
+
 // Timing Functions:
-function timing(){
-    console.log("GOing into function");
+setInterval(function timing() {
+
+    var time_left_alpha = "Time Left: ";
+    var min_left = "";
+    var sec_left = "";
+
     if(time > 0){
-        min = Math.floor(time / 60);
-        sec = time % 60;
+        var min = Math.floor(time / 60);
+        var sec = time % 60;
+
         min_left = min.toString();
         if (sec == 0){
             sec_left = "00";
@@ -150,14 +142,15 @@ function timing(){
         else{
             sec_left = sec.toString();
         }
-        time_left = time_left_alpha.concat(min_left,colon,sec_left);
-        time -=1;
-        return time_left;
+
+        time_left = time_left_alpha.concat(min_left, ":", sec_left);
+        time -= 1;
     }
     else {
+        return;
         // TO DO: exit game / game over window
     }
-}
+}, 1000);
 
 // Menu Class
 function menu() {
