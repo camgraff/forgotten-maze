@@ -6,6 +6,12 @@ var x;
 var y;
 var time = 120;
 var time_left = "";
+var min = 0;
+var sec = 0;
+var time_left_alpha = "Time Left: ";
+var min_left = "";
+var sec_left = "";
+var colon = ":";
 
 var GAME_SIZE = 25;
 var walls = [];
@@ -41,7 +47,6 @@ function game() {
     var img = document.getElementById("floor");
     x = 25;
     y = 25;
-  
     this.update = function() {
         
         // Background image
@@ -95,24 +100,23 @@ function newMaze(){
 
 // Timing Functions:
 function timing(){
+    console.log("GOing into function");
     if(time > 0){
-        var min = time / 60;
-        var sec = time % 60;
-        var time_left_alpha = "Time Left: ";
-        var min_left = min.toString();
-        var colon = ":";
+        min = Math.floor(time / 60);
+        sec = time % 60;
+        min_left = min.toString();
         if (sec == 0){
-            var sec_left = "00";
+            sec_left = "00";
         }
         else if(sec < 10){
-            var sec_left = "0".concat(sec.toString());
+            sec_left = "0".concat(sec.toString());
         }
         else{
-            var sec_left = sec.toString();
+            sec_left = sec.toString();
         }
-        var time_left = time_left_alpha.concat(min_left,colon,sec_left);
+        time_left = time_left_alpha.concat(min_left,colon,sec_left);
         time -=1;
-        setTimeout(timing(), 1000);
+        return time_left;
     }
     else {
         // TO DO: exit game / game over window
