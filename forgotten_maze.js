@@ -1,7 +1,6 @@
 var canvas;
 var menu;
 var game;
-var on_menu = true;
 var x;
 var y;
 var time = 120;
@@ -14,7 +13,12 @@ var sec_left = "";
 var colon = ":";
 
 var GAME_SIZE = 25;
+var on_menu = true;
+var score = 0;
 var walls = [];
+var coins = [];
+var playerRotation = 0;
+
 
 window.onload = function() {
     canvas = document.getElementById("forgotten_maze");
@@ -45,18 +49,30 @@ var forgotten_maze = {
 // Game Class
 function game() {
     var img = document.getElementById("floor");
+<<<<<<< Updated upstream
     x = 25;
     y = 25;
+=======
+    var coin = document.getElementById("coin");
+    x = 25;
+    y = 25;
+
+    drawCoins();
+  
+>>>>>>> Stashed changes
     this.update = function() {
         
         // Background image
         forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
             0, 0, canvas.width, canvas.height);
 
+<<<<<<< Updated upstream
         // Draw Player
         forgotten_maze.context.fillStyle = "#FFFFFF";
         forgotten_maze.context.fillRect(x, y, 25, 25);
         
+=======
+>>>>>>> Stashed changes
         // Draw outside walls
         forgotten_maze.context.fillStyle = "#000000";
         forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);                                         // Top wall
@@ -72,6 +88,7 @@ function game() {
         forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
         walls.push([50, 50, 150, 75]);
 
+<<<<<<< Updated upstream
         // Draw Time
         forgotten_maze.context.fillStyle = "#FFFFFF";
         forgotten_maze.context.font = "15px Arial";
@@ -95,6 +112,25 @@ function newMaze(){
             cells[i][j] = 0;
             unvis[i][j] = true;
         }
+=======
+
+        // Draw Coins
+        for (var i = 0; i < coins.length; i++) {
+            if (coins[i][2] == 1) {
+                forgotten_maze.context.drawImage(coin, coins[i][0], coins[i][1], GAME_SIZE, GAME_SIZE);
+            }
+        }
+
+        // Draw Score
+        forgotten_maze.context.fillStyle = "#FFFFFF";
+        forgotten_maze.context.font = "15px Arial";
+        forgotten_maze.context.fillText("Score: ", 600, 20);
+        forgotten_maze.context.fillText(score, 650, 20);
+
+        // Draw Player
+        drawPlayer(forgotten_maze.context);
+
+>>>>>>> Stashed changes
     }
 }
 
@@ -280,6 +316,7 @@ function checkKeyPressed(e) {
             case 37:
                 // left key pressed
                 x -= 5;
+                playerRotation = 270;
                 if (checkCollision(0) == true) {
                     x += 5;
                 }
@@ -287,6 +324,7 @@ function checkKeyPressed(e) {
             case 38:
                 // up key pressed
                 y -= 5;
+                playerRotation = 0;
                 if (checkCollision(1) == true) {
                     y += 5;
                 }
@@ -294,6 +332,7 @@ function checkKeyPressed(e) {
             case 39:
                 // right key pressed
                 x += 5;
+                playerRotation = 90;
                 if (checkCollision(2) == true) {
                     x -= 5;
                 }
@@ -301,14 +340,17 @@ function checkKeyPressed(e) {
             case 40:
                 // down key pressed
                 y += 5;
+                playerRotation = 180;
                 if (checkCollision(3) == true) {
                     y -= 5;
                 }
                 break;  
-        }   
-    } 
+        }
+        gatherCoin();
+    }
 }
 
+// Check collision with wall
 function checkCollision(direction) {
 
     if (direction == 0) { // left
@@ -362,4 +404,50 @@ function checkCollision(direction) {
     }
 
     return false;
+}
+
+// Check collision with coins
+function gatherCoin() {
+    for (i = 0; i < coins.length; i++) {
+        var current_x = x + (GAME_SIZE/2);
+        var current_y = y + (GAME_SIZE/2);
+        var coin_x = coins[i][0];
+        var coin_y = coins[i][1];
+        if (current_x > coin_x && current_x < coin_x + GAME_SIZE && current_y > coin_y && current_y < coin_y + GAME_SIZE) {
+            if (coins[i][2] == 1) {
+                coins[i][2] = 0;
+                score += 50;
+            }
+        }
+    }  
+}
+
+// Draw coins
+function drawCoins() {
+    // Array [x-cord (point 1), y-cord (point 1), drawCoin (bool)]
+    coins.push([50,25,1]);
+    coins.push([100,25,1]);
+    coins.push([150,25,1]);
+    coins.push([200,25,1]);
+    coins.push([250,25,1]);
+    coins.push([300,25,1]);
+    coins.push([350,25,1]);
+}
+
+// Draw player with correct rotation
+function drawPlayer(ctx) {
+    var player_up = document.getElementById("player_up");
+    var player_down = document.getElementById("player_down");
+    var player_left = document.getElementById("player_left");
+    var player_right = document.getElementById("player_right");
+
+    if (playerRotation == 0) {
+        ctx.drawImage(player_up, x, y, GAME_SIZE, GAME_SIZE);
+    } else if (playerRotation == 90) {
+        ctx.drawImage(player_right, x, y, GAME_SIZE, GAME_SIZE);
+    } else if (playerRotation == 180) {
+        ctx.drawImage(player_down, x, y, GAME_SIZE, GAME_SIZE);
+    } else {
+        ctx.drawImage(player_left, x, y, GAME_SIZE, GAME_SIZE);
+    }
 }
