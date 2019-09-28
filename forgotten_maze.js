@@ -264,6 +264,9 @@ function checkCollision(direction) {
             if (x > walls[i][0] && x < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
                 return true;
             }
+            if (x > walls[i][0] && x < walls[i][2] && y + (GAME_SIZE/2) > walls[i][1] && y + (GAME_SIZE/2) < walls[i][3]) {
+                return true;
+            }
         }
     } else if (direction == 1) { // up
         for (i = 0; i < walls.length; i++) {
@@ -271,6 +274,9 @@ function checkCollision(direction) {
                 return true;
             }
             if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
+                return true;
+            }
+            if (x + (GAME_SIZE/2) > walls[i][0] && x + (GAME_SIZE/2) < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
                 return true;
             }
         }
@@ -282,6 +288,9 @@ function checkCollision(direction) {
             if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
                 return true;
             }
+            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + (GAME_SIZE/2) > walls[i][1] && y + (GAME_SIZE/2) < walls[i][3]) {
+                return true;
+            }
         }
     } else if (direction == 3) { // down
         for (i = 0; i < walls.length; i++) {
@@ -289,6 +298,9 @@ function checkCollision(direction) {
                 return true;
             }
             if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
+                return true;
+            }
+            if (x + (GAME_SIZE/2) > walls[i][0] && x + (GAME_SIZE/2) < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
                 return true;
             }
         }
