@@ -5,6 +5,9 @@ var on_menu = true;
 var x;
 var y;
 
+var GAME_SIZE = 25;
+var walls = [];
+
 window.onload = function() {
     canvas = document.getElementById("forgotten_maze");
     startGame();
@@ -43,8 +46,21 @@ function game() {
         forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
             0, 0, canvas.width, canvas.height);
 
+        // Draw Player
+        forgotten_maze.context.fillStyle = "#FFFFFF";
+        forgotten_maze.context.fillRect(x, y, 25, 25);
+
+        // Draw walls
         forgotten_maze.context.fillStyle = "#000000";
-        forgotten_maze.context.fillRect(x, y, 50, 50);
+        forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);                                         // Top wall
+        walls.push([0, 0, canvas.width, GAME_SIZE]);
+        forgotten_maze.context.fillRect(canvas.width - GAME_SIZE, 0, GAME_SIZE, canvas.height);                 // Right wall
+        walls.push([canvas.width - GAME_SIZE, 0, GAME_SIZE, canvas.height]);
+        forgotten_maze.context.fillRect(0, 0, GAME_SIZE, canvas.height);                                        // Left wall
+        walls.push([0, 0, GAME_SIZE, canvas.height]);
+        forgotten_maze.context.fillRect(0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, GAME_SIZE);   // Bottom wall
+        walls.push([0, canvas.height - GAME_SIZE, 2*GAME_SIZE, GAME_SIZE]);
+
 
     }
 }
@@ -205,20 +221,41 @@ function checkKeyPressed(e) {
                 on_menu = true;
             case 37:
                 // left key pressed
-                x -= 10;
+                x -= 5;
+                if (!checkCollision) {
+                    x += 5;
+                }
                 break;
             case 38:
                 // up key pressed
-                y -= 10;
+                y -= 5;
+                if (!checkCollision) {
+                    y += 5;
+                }
                 break;
             case 39:
                 // right key pressed
-                x += 10;
+                x += 5;
+                if (!checkCollision) {
+                    x -= 5;
+                }
                 break;
             case 40:
                 // down key pressed
-                y += 10;
+                y += 5;
+                if (!checkCollision) {
+                    y -= 5;
+                }
                 break;  
         }   
     } 
+}
+
+function checkCollision() {
+    for (i = 0; i < walls.length; i++) {
+        if (x > walls[i][0] && x < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
+            return true
+        }
+    }
+    return false;
 }
