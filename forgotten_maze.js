@@ -4,8 +4,8 @@ var game;
 var on_menu = true;
 var x;
 var y;
-var start_time = 2;
-var seconds = mins * 60;
+var time = 120;
+var time_left = "";
 
 var GAME_SIZE = 25;
 var walls = [];
@@ -43,7 +43,7 @@ function game() {
     y = 25;
   
     this.update = function() {
-
+        
         // Background image
         forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
             0, 0, canvas.width, canvas.height);
@@ -51,7 +51,7 @@ function game() {
         // Draw Player
         forgotten_maze.context.fillStyle = "#FFFFFF";
         forgotten_maze.context.fillRect(x, y, 25, 25);
-
+        
         // Draw outside walls
         forgotten_maze.context.fillStyle = "#000000";
         forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);                                         // Top wall
@@ -63,8 +63,15 @@ function game() {
         forgotten_maze.context.fillRect(0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, GAME_SIZE);   // Bottom wall
         walls.push([0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, canvas.height]);
 
+        // Random wall for Testing
         forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
         walls.push([50, 50, 150, 75]);
+
+        // Draw Time
+        forgotten_maze.context.fillStyle = "#FFFFFF";
+        forgotten_maze.context.font = "15px Arial";
+        forgotten_maze.context.textAlign = "left";
+        forgotten_maze.context.fillText(timing(), 25, 20);
     }
 
 }
@@ -86,10 +93,30 @@ function newMaze(){
     }
 }
 
-// Timer Functions:
-function countdown(){
-    setTimeout('Decrement()', 60);
-
+// Timing Functions:
+function timing(){
+    if(time > 0){
+        var min = time / 60;
+        var sec = time % 60;
+        var time_left_alpha = "Time Left: ";
+        var min_left = min.toString();
+        var colon = ":";
+        if (sec == 0){
+            var sec_left = "00";
+        }
+        else if(sec < 10){
+            var sec_left = "0".concat(sec.toString());
+        }
+        else{
+            var sec_left = sec.toString();
+        }
+        var time_left = time_left_alpha.concat(min_left,colon,sec_left);
+        time -=1;
+        setTimeout(timing(), 1000);
+    }
+    else {
+        // TO DO: exit game / game over window
+    }
 }
 
 // Menu Class
