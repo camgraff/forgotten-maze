@@ -190,7 +190,7 @@ function menu() {
             forgotten_maze.context.fillText("Down Arrow - Move character down", 125, 250);
             forgotten_maze.context.fillText("Left Arrow - Move character left", 125, 300);
             forgotten_maze.context.fillText("Right Arrow - Move character right", 125, 350);
-            forgotten_maze.context.fillText("Esc - Move character up", 125, 400);
+            forgotten_maze.context.fillText("Esc - Go to back to main menu", 125, 400);
 
         } else if (on_developers) {
 
