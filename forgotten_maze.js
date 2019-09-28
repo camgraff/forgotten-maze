@@ -50,19 +50,22 @@ function game() {
         forgotten_maze.context.fillStyle = "#FFFFFF";
         forgotten_maze.context.fillRect(x, y, 25, 25);
 
-        // Draw walls
+        // Draw outside walls
         forgotten_maze.context.fillStyle = "#000000";
         forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);                                         // Top wall
         walls.push([0, 0, canvas.width, GAME_SIZE]);
         forgotten_maze.context.fillRect(canvas.width - GAME_SIZE, 0, GAME_SIZE, canvas.height);                 // Right wall
-        walls.push([canvas.width - GAME_SIZE, 0, GAME_SIZE, canvas.height]);
+        walls.push([canvas.width - GAME_SIZE, 0, canvas.width, canvas.height]);
         forgotten_maze.context.fillRect(0, 0, GAME_SIZE, canvas.height);                                        // Left wall
         walls.push([0, 0, GAME_SIZE, canvas.height]);
         forgotten_maze.context.fillRect(0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, GAME_SIZE);   // Bottom wall
-        walls.push([0, canvas.height - GAME_SIZE, 2*GAME_SIZE, GAME_SIZE]);
+        walls.push([0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, canvas.height]);
 
+        forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
+        walls.push([50, 50, 150, 75]);
 
     }
+
 }
 
 // Manu Class
@@ -222,28 +225,28 @@ function checkKeyPressed(e) {
             case 37:
                 // left key pressed
                 x -= 5;
-                if (!checkCollision) {
+                if (checkCollision(0) == true) {
                     x += 5;
                 }
                 break;
             case 38:
                 // up key pressed
                 y -= 5;
-                if (!checkCollision) {
+                if (checkCollision(1) == true) {
                     y += 5;
                 }
                 break;
             case 39:
                 // right key pressed
                 x += 5;
-                if (!checkCollision) {
+                if (checkCollision(2) == true) {
                     x -= 5;
                 }
                 break;
             case 40:
                 // down key pressed
                 y += 5;
-                if (!checkCollision) {
+                if (checkCollision(3) == true) {
                     y -= 5;
                 }
                 break;  
@@ -251,11 +254,45 @@ function checkKeyPressed(e) {
     } 
 }
 
-function checkCollision() {
-    for (i = 0; i < walls.length; i++) {
-        if (x > walls[i][0] && x < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
-            return true
+function checkCollision(direction) {
+
+    if (direction == 0) { // left
+        for (i = 0; i < walls.length; i++) {
+            if (x > walls[i][0] && x < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
+                return true;
+            }
+            if (x > walls[i][0] && x < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
+                return true;
+            }
+        }
+    } else if (direction == 1) { // up
+        for (i = 0; i < walls.length; i++) {
+            if (x > walls[i][0] && x < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
+                return true;
+            }
+            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
+                return true;
+            }
+        }
+    } else if (direction == 2) { // right
+        for (i = 0; i < walls.length; i++) {
+            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
+                return true;
+            }
+            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
+                return true;
+            }
+        }
+    } else if (direction == 3) { // down
+        for (i = 0; i < walls.length; i++) {
+            if (x > walls[i][0] && x < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
+                return true;
+            }
+            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
+                return true;
+            }
         }
     }
+
     return false;
 }
