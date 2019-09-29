@@ -3,6 +3,8 @@ var menu;
 var game;
 var x;
 var y;
+var start_time = 2;
+//var seconds = mins * 60;
 
 // Timing variables
 var time = 120;
@@ -37,6 +39,7 @@ var forgotten_maze = {
     setup : function() {
         this.context = canvas.getContext("2d");
         this.interval = setInterval(redrawGame, 20);
+        boardCells = createMaze();
     },
     clear : function() {
         this.context.clearRect(0, 0, canvas.width, canvas.height);
@@ -47,8 +50,8 @@ var forgotten_maze = {
 function game() {
     var img = document.getElementById("floor");
     var coin = document.getElementById("coin");
-    x = 25;
-    y = 25;
+    x = 0;
+    y = 0;
 
     drawCoins();
   
@@ -60,10 +63,13 @@ function game() {
 
         // Draw Player
         forgotten_maze.context.fillStyle = "#FFFFFF";
-        forgotten_maze.context.fillRect(x, y, 25, 25);
+        forgotten_maze.context.fillRect(x, y, 23, 23);
+        drawPlayer(forgotten_maze.context);
         
 
         // Draw outside walls
+        
+        /*
         forgotten_maze.context.fillStyle = "#000000";
         forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);                                         // Top wall
         walls.push([0, 0, canvas.width, GAME_SIZE]);
@@ -73,10 +79,10 @@ function game() {
         walls.push([0, 0, GAME_SIZE, canvas.height]);
         forgotten_maze.context.fillRect(0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, GAME_SIZE);   // Bottom wall
         walls.push([0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, canvas.height]);
-
+        */
         // Random wall for Testing
-        forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
-        walls.push([50, 50, 150, 75]);
+        //forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
+        //walls.push([50, 50, 150, 75]);
 
         // Draw Coins
         for (var i = 0; i < coins.length; i++) {
@@ -84,6 +90,8 @@ function game() {
                 forgotten_maze.context.drawImage(coin, coins[i][0], coins[i][1], GAME_SIZE, GAME_SIZE);
             }
         }
+
+    
 
         // Draw Time
         forgotten_maze.context.fillStyle = "#FFFFFF";
@@ -97,29 +105,100 @@ function game() {
         forgotten_maze.context.fillText("Score: ", 650, 20);
         forgotten_maze.context.fillText(score, 700, 20);
 
-        // Draw Player
-        drawPlayer(forgotten_maze.context);
+        //draw maze
+        forgotten_maze.context.fillStyle = "#000000";
+        for (var row=0; row<boardCells.length; row++) {
+            for (var col=0; col<boardCells[0].length; col++) {
+                for (var i=0; i<4; i++) {
+                    //draw walls
+                    if (boardCells[row][col][i] === 0) {
+                        switch (i) {
+                            //left
+                            case 0:
+                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*col, 2, GAME_SIZE);
+                                //walls.push([GAME_SIZE*row, GAME_SIZE*col, GAME_SIZE*row+2, GAME_SIZE*(col+1)]);
+                                break;
+                            //right
+                            case 1:
+                                forgotten_maze.context.fillRect(GAME_SIZE*(row+1), GAME_SIZE*col, 2, GAME_SIZE);
+                                //walls.push([GAME_SIZE*(row+1), GAME_SIZE*col, GAME_SIZE*(row+1)+2, GAME_SIZE*(col+1)]);
+                                break;
+                            //top
+                            case 2:
+                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*col, GAME_SIZE, 2);
+                                break;
+                            //bottom
+                            case 3:
+                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*(col+1), GAME_SIZE, 2);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
     }
-
 }
 
-// mazeGenerator possibility:
-// canvas: (width: 750, height: 500)
-// function newMaze(){
-//     var x_array = canvas.width/25
-//     var y_array = canvas.height/25
-//     var cells = newArray();
-//     var unvis = newArray();
-//     for (var i = 0; i < x_array; i++){
-//         cells[i] = newArray();
-//         unvis[i] = newArray();
-//         for (var j = 0; j < y_array; i++){
-//             cells[i][j] = 0;
-//             unvis[i][j] = true;
-//         }
+function createMaze(){
+    var xMax = canvas.width/GAME_SIZE;
+    var yMax = canvas.height/GAME_SIZE;
+    cells = [];
+    visited = [];
+    for (var i = 0; i < xMax; i++){
+        cells[i] = [];
+        visited[i] = [];
+        for (var j = 0; j < yMax; j++){
+            //[left,right,up,down]
+            cells[i][j] = [0,0,0,0];        //[0,0,0,0] indicates all walls around the cell are present
+            visited[i][j] = false;
+        }
+    }
 
-//     }
-// }
+    //first cell is top left in maze
+    currentCell = [0,0];
+    visited[0][0] = true;
+    var path = [currentCell];
+
+    while (path.length > 0) {
+
+        //determine valid neighbor cells
+        //neighbor cells are of the from [xpos,ypos,currentCell border, neighbor border]
+        var neighbors = [];
+        //check left neighbor
+        var left = [currentCell[0]-1,currentCell[1],0,1];
+        if (left[0] >= 0 && left[0] < xMax && left[1] >= 0 && left[1] < yMax && !visited[left[0]][left[1]]) neighbors.push(left);
+        //check right neighbor
+        var right = [currentCell[0]+1,currentCell[1],1,0];
+        if (right[0] >= 0 && right[0] < xMax && right[1] >= 0 && right[1] < yMax && !visited[right[0]][right[1]]) neighbors.push(right);
+        //check up neighbor
+        var up = [currentCell[0],currentCell[1]-1,2,3];
+        if (up[0] >= 0 && up[0] < xMax && up[1] >= 0 && up[1] < yMax && !visited[up[0]][up[1]]) neighbors.push(up);
+        //check down neighbor
+        var down = [currentCell[0],currentCell[1]+1,3,2];
+        if (down[0] >= 0 && down[0] < xMax && down[1] >= 0 && down[1] < yMax && !visited[down[0]][down[1]]) neighbors.push(down);
+
+        if (neighbors.length) {
+            var nextCell = neighbors[Math.floor(random()*neighbors.length)];
+            //make a path between currentCell and nextCell
+            cells[currentCell[0]][currentCell[1]][nextCell[2]] = 1;
+            cells[nextCell[0]][nextCell[1]][nextCell[3]] = 1;
+            visited[nextCell[0]][nextCell[1]] = true;
+            currentCell = nextCell;
+            path.push(currentCell);
+        } else {
+            path.pop();
+            currentCell = path[path.length-1]
+        }
+    }
+    return cells;
+}
+
+var seed = 2;
+function random() {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
+
 
 // Timing Functions:
 setInterval(function timing() {
