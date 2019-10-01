@@ -1,20 +1,24 @@
 var canvas;
 var menu;
 var game;
+var win = false;
 var x;
 var y;
 var start_time = 2;
-//var seconds = mins * 60;
+var WALL_SIZE = 2;
 
 // Timing variables
-var time = 120;
+var time = 180;
 var time_left = "";
 
 // Game Variables
 var GAME_SIZE = 25;
 var on_menu = true;
 var score = 0;
-var walls = [];
+var walls_left = [];
+var walls_right = [];
+var walls_up = [];
+var walls_down = [];
 var coins = [];
 var playerRotation = 0;
 
@@ -50,16 +54,20 @@ var forgotten_maze = {
 function game() {
     var img = document.getElementById("floor");
     var coin = document.getElementById("coin");
-    x = 0;
-    y = 0;
-
-    drawCoins();
+    // x = 0;
+    // y = 25;
+    x = canvas.width - GAME_SIZE;
+    y = canvas.height - 2*GAME_SIZE;
   
     this.update = function() {
         
         // Background image
         forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
             0, 0, canvas.width, canvas.height);
+
+        // Draw Finish
+        forgotten_maze.context.fillStyle = "#32EB21";
+        forgotten_maze.context.fillRect(canvas.width - GAME_SIZE, canvas.height - GAME_SIZE, 23, 23);
 
         // Draw Player
         forgotten_maze.context.fillStyle = "#FFFFFF";
@@ -68,21 +76,8 @@ function game() {
         
 
         // Draw outside walls
-        
-        /*
         forgotten_maze.context.fillStyle = "#000000";
-        forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);                                         // Top wall
-        walls.push([0, 0, canvas.width, GAME_SIZE]);
-        forgotten_maze.context.fillRect(canvas.width - GAME_SIZE, 0, GAME_SIZE, canvas.height);                 // Right wall
-        walls.push([canvas.width - GAME_SIZE, 0, canvas.width, canvas.height]);
-        forgotten_maze.context.fillRect(0, 0, GAME_SIZE, canvas.height);                                        // Left wall
-        walls.push([0, 0, GAME_SIZE, canvas.height]);
-        forgotten_maze.context.fillRect(0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, GAME_SIZE);   // Bottom wall
-        walls.push([0, canvas.height - GAME_SIZE, canvas.width - 2*GAME_SIZE, canvas.height]);
-        */
-        // Random wall for Testing
-        //forgotten_maze.context.fillRect(50, 50, 100, GAME_SIZE);
-        //walls.push([50, 50, 150, 75]);
+        forgotten_maze.context.fillRect(0, 0, canvas.width, GAME_SIZE);  // Top Wall
 
         // Draw Coins
         for (var i = 0; i < coins.length; i++) {
@@ -91,7 +86,6 @@ function game() {
             }
         }
 
-    
 
         // Draw Time
         forgotten_maze.context.fillStyle = "#FFFFFF";
@@ -115,21 +109,23 @@ function game() {
                         switch (i) {
                             //left
                             case 0:
-                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*col, 2, GAME_SIZE);
-                                //walls.push([GAME_SIZE*row, GAME_SIZE*col, GAME_SIZE*row+2, GAME_SIZE*(col+1)]);
+                                forgotten_maze.context.fillRect(GAME_SIZE*row - WALL_SIZE, GAME_SIZE*col + GAME_SIZE, WALL_SIZE, GAME_SIZE);
+                                walls_left.push([GAME_SIZE*row, GAME_SIZE*col + GAME_SIZE, GAME_SIZE*row, GAME_SIZE*(col+2)]);
                                 break;
                             //right
                             case 1:
-                                forgotten_maze.context.fillRect(GAME_SIZE*(row+1), GAME_SIZE*col, 2, GAME_SIZE);
-                                //walls.push([GAME_SIZE*(row+1), GAME_SIZE*col, GAME_SIZE*(row+1)+2, GAME_SIZE*(col+1)]);
+                                forgotten_maze.context.fillRect(GAME_SIZE*(row+1) - WALL_SIZE, GAME_SIZE*col + GAME_SIZE, WALL_SIZE, GAME_SIZE);
+                                walls_right.push([GAME_SIZE*(row+1), GAME_SIZE*col + GAME_SIZE, GAME_SIZE*(row+1), GAME_SIZE*(col+2)]);
                                 break;
                             //top
                             case 2:
-                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*col, GAME_SIZE, 2);
+                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*col + GAME_SIZE - WALL_SIZE, GAME_SIZE, WALL_SIZE);
+                                walls_up.push([GAME_SIZE*row, GAME_SIZE*col + GAME_SIZE, GAME_SIZE*(row+1), GAME_SIZE*(col+1)]);
                                 break;
                             //bottom
                             case 3:
-                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*(col+1), GAME_SIZE, 2);
+                                forgotten_maze.context.fillRect(GAME_SIZE*row, GAME_SIZE*(col+1) + GAME_SIZE - WALL_SIZE, GAME_SIZE, WALL_SIZE);
+                                walls_down.push([GAME_SIZE*row, GAME_SIZE*(col+1) + GAME_SIZE, GAME_SIZE*(row+1), GAME_SIZE*(col+1) + GAME_SIZE]);
                                 break;
                         }
                     }
@@ -141,7 +137,7 @@ function game() {
 
 function createMaze(){
     var xMax = canvas.width/GAME_SIZE;
-    var yMax = canvas.height/GAME_SIZE;
+    var yMax = canvas.height/GAME_SIZE - 1;
     cells = [];
     visited = [];
     for (var i = 0; i < xMax; i++){
@@ -151,6 +147,10 @@ function createMaze(){
             //[left,right,up,down]
             cells[i][j] = [0,0,0,0];        //[0,0,0,0] indicates all walls around the cell are present
             visited[i][j] = false;
+            var random_number = Math.floor(Math.random() * 10);
+            if (random_number > 8 && i != xMax - 1 && j != yMax) {
+                coins.push([i * GAME_SIZE,(j+1) * GAME_SIZE, 1]);
+            }
         }
     }
 
@@ -199,7 +199,6 @@ function random() {
     return x - Math.floor(x);
 }
 
-
 // Timing Functions:
 setInterval(function timing() {
 
@@ -240,6 +239,10 @@ function menu() {
     var on_developers = false;
   
     this.update = function() {
+
+        if (win) {
+            on_home = false;
+        }
 
         if (on_home) {
 
@@ -294,11 +297,11 @@ function menu() {
             // Control Description
             forgotten_maze.context.fillStyle = "#FFFFFF";
             forgotten_maze.context.font = "36px Arial";
-            forgotten_maze.context.fillText("Up Arrow - Move character up", 125, 200);
-            forgotten_maze.context.fillText("Down Arrow - Move character down", 125, 250);
-            forgotten_maze.context.fillText("Left Arrow - Move character left", 125, 300);
-            forgotten_maze.context.fillText("Right Arrow - Move character right", 125, 350);
-            forgotten_maze.context.fillText("Esc - Go to Main Menu (will pause the game)", 125, 400);
+            forgotten_maze.context.fillText("Up Arrow/W - Move character up", 100, 200);
+            forgotten_maze.context.fillText("Down Arrow/S - Move character down", 100, 250);
+            forgotten_maze.context.fillText("Left Arrow/A - Move character left", 100, 300);
+            forgotten_maze.context.fillText("Right Arrow/D - Move character right", 100, 350);
+            forgotten_maze.context.fillText("Esc - Go to Main Menu (will pause the game)", 100, 400);
 
         } else if (on_developers) {
 
@@ -325,31 +328,56 @@ function menu() {
             forgotten_maze.context.fillText("Cameron Graff", 245, 350);
             forgotten_maze.context.fillText("Jerry Bui", 300, 275);
 
+        } else if (win) {
+            // Background image
+            forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
+                0, 0, canvas.width, canvas.height);
+
+            // Page Title
+            forgotten_maze.context.fillStyle = "#000000";
+            forgotten_maze.context.font = "50px Arial";
+            forgotten_maze.context.fillText("You Win!", 250, 100);
+
+            // Return Button
+            forgotten_maze.context.fillStyle = "#000000";
+            forgotten_maze.context.fillRect(0, 0, 200, 75);
+            forgotten_maze.context.fillStyle = "#FFFFFF";
+            forgotten_maze.context.font = "36px Arial";
+            forgotten_maze.context.fillText("Return", 50, 50);
+
+            // Score Description
+            forgotten_maze.context.fillStyle = "#FFFFFF";
+            forgotten_maze.context.font = "36px Arial";
+            forgotten_maze.context.fillText("Your Score: ", 150, 200);
+            forgotten_maze.context.fillText(score, 375, 200);
         }
 
     }
 
-    this.changeScreen = function(x, y) {
+    this.changeScreen = function(current_x, current_y) {
         if (on_home) {
-            if (x > 275 && x < 475 && y > 200 && y < 275) {
+            if (current_x > 275 && current_x < 475 && current_y > 200 && current_y < 275) {
                 on_home = true;
                 on_controls = false;
                 on_developers = false;
                 on_menu = false;
-            } else if (x > 275 && x < 475 && y > 300 && y < 375) {
+                win = false;
+                resetGame();
+            } else if (current_x > 275 && current_x < 475 && current_y > 300 && current_y < 375) {
                 on_home = false;
                 on_controls = true;
                 on_developers = false;
-            } else if (x > 275 && x < 475 && y > 400 && y < 475) {
+            } else if (current_x > 275 && current_x < 475 && current_y > 400 && current_y < 475) {
                 on_home = false;
                 on_controls = false;
                 on_developers = true;
             }
-        } else if (on_controls || on_developers) {
-            if (x > 0 && x < 200 && y > 0 && y < 75) {
+        } else if (on_controls || on_developers || win) {
+            if (current_x > 0 && current_x < 200 && current_y > 0 && current_y < 75) {
                 on_home = true;
                 on_controls = false;
                 on_developers = false;
+                win = false;
             }
         }
     }
@@ -382,10 +410,12 @@ function redrawGame() {
 // Function to check key press
 function checkKeyPressed(e) {
     if (!on_menu) {
+        checkFinish();
         switch(e.keyCode) {
             case 27:
                 on_menu = true;
             case 37:
+            case 65:
                 // left key pressed
                 x -= 5;
                 playerRotation = 270;
@@ -394,6 +424,7 @@ function checkKeyPressed(e) {
                 }
                 break;
             case 38:
+            case 87:
                 // up key pressed
                 y -= 5;
                 playerRotation = 0;
@@ -402,6 +433,7 @@ function checkKeyPressed(e) {
                 }
                 break;
             case 39:
+            case 68:
                 // right key pressed
                 x += 5;
                 playerRotation = 90;
@@ -410,6 +442,7 @@ function checkKeyPressed(e) {
                 }
                 break;
             case 40:
+            case 83:
                 // down key pressed
                 y += 5;
                 playerRotation = 180;
@@ -425,53 +458,78 @@ function checkKeyPressed(e) {
 // Check collision with wall
 function checkCollision(direction) {
 
-    if (direction == 0) { // left
-        for (i = 0; i < walls.length; i++) {
-            if (x > walls[i][0] && x < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
-                return true;
-            }
-            if (x > walls[i][0] && x < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
-                return true;
-            }
-            if (x > walls[i][0] && x < walls[i][2] && y + (GAME_SIZE/2) > walls[i][1] && y + (GAME_SIZE/2) < walls[i][3]) {
-                return true;
-            }
-        }
-    } else if (direction == 1) { // up
-        for (i = 0; i < walls.length; i++) {
-            if (x > walls[i][0] && x < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
-                return true;
-            }
-            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
-                return true;
-            }
-            if (x + (GAME_SIZE/2) > walls[i][0] && x + (GAME_SIZE/2) < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
-                return true;
+    var second_x = x + GAME_SIZE;
+    var second_y = y + GAME_SIZE;
+
+    var first_wall_x;
+    var first_wall_y;
+    var second_wall_x;
+    var second_wall_y;
+
+    middle_x = x + (GAME_SIZE/2);
+    middle_y = y + (GAME_SIZE/2);
+
+    if (direction == 0) {
+        for (i = 0; i < walls_left.length; i++) {
+            first_wall_x = walls_left[i][0];
+            first_wall_y = walls_left[i][1];
+            second_wall_x = walls_left[i][2];
+            second_wall_y = walls_left[i][3];
+
+            if (first_wall_x > x && second_wall_x < second_x) {
+                if ((first_wall_y > y && first_wall_y < second_y) || (second_wall_y > y && second_wall_y < second_y) || (first_wall_y == y && second_wall_y == second_y)) {
+                    return true;
+                } else if (first_wall_y < middle_y && second_wall_y > middle_y) {
+                    return true;
+                }
             }
         }
     } else if (direction == 2) { // right
-        for (i = 0; i < walls.length; i++) {
-            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y > walls[i][1] && y < walls[i][3]) {
-                return true;
-            }
-            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE <= walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
-                return true;
-            }
-            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + (GAME_SIZE/2) > walls[i][1] && y + (GAME_SIZE/2) < walls[i][3]) {
-                return true;
+        for (i = 0; i < walls_right.length; i++) {
+            first_wall_x = walls_right[i][0];
+            first_wall_y = walls_right[i][1];
+            second_wall_x = walls_right[i][2];
+            second_wall_y = walls_right[i][3];
+
+            if (first_wall_x > x && second_wall_x < second_x) {
+                if ((first_wall_y > y && first_wall_y < second_y) || (second_wall_y > y && second_wall_y < second_y) || (first_wall_y == y && second_wall_y == second_y)) {
+                    return true;
+                } else if (first_wall_y < middle_y && second_wall_y > middle_y) {
+                    return true;
+                }
             }
         }
-    } else if (direction == 3) { // down
-        for (i = 0; i < walls.length; i++) {
-            if (x > walls[i][0] && x < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
-                return true;
+    } else if (direction == 1) { // up
+        for (i = 0; i < walls_up.length; i++) {
+            first_wall_x = walls_up[i][0];
+            first_wall_y = walls_up[i][1];
+            second_wall_x = walls_up[i][2];
+            second_wall_y = walls_up[i][3];
+
+            if (first_wall_y > y && second_wall_y < second_y) {
+                if ((first_wall_x > x && first_wall_x < second_x) || (second_wall_x > x && second_wall_x < second_x) || (first_wall_x == x && second_wall_x == second_x)) {
+                    return true;
+                } else if (first_wall_x < middle_x && second_wall_x > middle_x) {
+                    return true;
+                }
             }
-            if (x + GAME_SIZE > walls[i][0] && x + GAME_SIZE < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
-                return true;
+
+        }
+    } else if (direction == 3) { // up
+        for (i = 0; i < walls_down.length; i++) {
+            first_wall_x = walls_down[i][0];
+            first_wall_y = walls_down[i][1];
+            second_wall_x = walls_down[i][2];
+            second_wall_y = walls_down[i][3];
+
+            if (first_wall_y > y && second_wall_y < second_y) {
+                if ((first_wall_x > x && first_wall_x < second_x) || (second_wall_x > x && second_wall_x < second_x) || (first_wall_x == x && second_wall_x == second_x)) {
+                    return true;
+                } else if (first_wall_x < middle_x && second_wall_x > middle_x) {
+                    return true;
+                }
             }
-            if (x + (GAME_SIZE/2) > walls[i][0] && x + (GAME_SIZE/2) < walls[i][2] && y + GAME_SIZE > walls[i][1] && y + GAME_SIZE < walls[i][3]) {
-                return true;
-            }
+
         }
     }
 
@@ -494,18 +552,6 @@ function gatherCoin() {
     }  
 }
 
-// Draw coins
-function drawCoins() {
-    // Array [x-cord (point 1), y-cord (point 1), drawCoin (bool)]
-    coins.push([50,25,1]);
-    coins.push([100,25,1]);
-    coins.push([150,25,1]);
-    coins.push([200,25,1]);
-    coins.push([250,25,1]);
-    coins.push([300,25,1]);
-    coins.push([350,25,1]);
-}
-
 // Draw player with correct rotation
 function drawPlayer(ctx) {
     var player_up = document.getElementById("player_up");
@@ -521,5 +567,24 @@ function drawPlayer(ctx) {
         ctx.drawImage(player_down, x, y, GAME_SIZE, GAME_SIZE);
     } else {
         ctx.drawImage(player_left, x, y, GAME_SIZE, GAME_SIZE);
+    }
+}
+
+// Check if user gets to finish
+function checkFinish() {
+    if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE) {
+        win = true;
+        on_menu = true;
+    }
+}
+
+// Reset Game for next player
+function resetGame() {
+    x = 0;
+    y = 25;
+    score = 0;
+    time = 180;
+    for(var i = 0; i < coins.length; i++) {
+        coins[i][2] = 1;
     }
 }
