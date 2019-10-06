@@ -24,6 +24,7 @@ var playerRotation = 0;
 
 
 window.onload = function() {
+    update_scores();
     canvas = document.getElementById("forgotten_maze");
     startGame();
 };
@@ -329,6 +330,7 @@ function menu() {
             forgotten_maze.context.fillText("Jerry Bui", 300, 275);
 
         } else if (win) {
+            highscore(score);
             // Background image
             forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
                 0, 0, canvas.width, canvas.height);
