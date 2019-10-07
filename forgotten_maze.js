@@ -1,17 +1,17 @@
 var canvas;
 var menu;
 var game;
-var win = false;
-var lose = false;
-var x;
-var y;
-var start_time = 120;
-var WALL_SIZE = 2;
 
 // Timing variables
+var start_time = 120;
 var time_left = "";
 
 // Game Variables
+var win = false;
+var lose = false;
+var x;      //player x position
+var y;      //player y position
+var WALL_SIZE = 2;
 var GAME_SIZE = 25;
 var on_menu = true;
 var score = 0;
@@ -160,10 +160,10 @@ function createMaze(){
     visited[0][0] = true;
     var path = [currentCell];
 
-    while (path.length > 0) {
+    while (path.length) {
 
         //determine valid neighbor cells
-        //neighbor cells are of the from [xpos,ypos,currentCell border, neighbor border]
+        //neighbor cells are of the form [xpos,ypos,currentCell border, neighbor border]
         var neighbors = [];
         //check left neighbor
         var left = [currentCell[0]-1,currentCell[1],0,1];
