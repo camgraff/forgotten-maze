@@ -2,13 +2,13 @@ var canvas;
 var menu;
 var game;
 var win = false;
+var lose = false;
 var x;
 var y;
 var start_time = 2;
 var WALL_SIZE = 2;
 
 // Timing variables
-var time = 180;
 var time_left = "";
 
 // Game Variables
@@ -225,15 +225,10 @@ setInterval(function timing() {
         time_left = time_left_alpha.concat(min_left, ":", sec_left);
         time -= 1;
     }
-    else {
-        return;
-        // TO DO: exit game / game over window
-    }
 }, 1000);
 
 // Menu Class
 function menu() {
-
     var img = document.getElementById("maze");
     var on_home = true;
     var on_controls = false;
@@ -244,6 +239,10 @@ function menu() {
         if (win) {
             on_home = false;
         }
+
+		if (lose) {
+			on_home = false;
+		}
 
         if (on_home) {
 
@@ -352,8 +351,23 @@ function menu() {
             forgotten_maze.context.font = "36px Arial";
             forgotten_maze.context.fillText("Your Score: ", 150, 200);
             forgotten_maze.context.fillText(score, 375, 200);
-        }
+        } else if (lose) {
+			// Background image
+			forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
+				0, 0, canvas.width, canvas.height);
 
+			// Times Up! You Lose!
+			forgotten_maze.context.fillStyle = "#000000";
+			forgotten_maze.context.font = "50px Arial";
+			forgotten_maze.context.fillText("Times Up! You Lose!", 150, 150);
+			
+			// Return Button
+			forgotten_maze.context.fillStyle = "#000000";
+			forgotten_maze.context.fillRect(0, 0, 200, 75);
+			forgotten_maze.context.fillStyle = "#FFFFFF";
+			forgotten_maze.context.font = "36px Arial";
+			forgotten_maze.context.fillText("Return", 50, 50);
+		}
     }
 
     this.changeScreen = function(current_x, current_y) {
@@ -364,6 +378,7 @@ function menu() {
                 on_developers = false;
                 on_menu = false;
                 win = false;
+				lose = false;
                 resetGame();
             } else if (current_x > 275 && current_x < 475 && current_y > 300 && current_y < 375) {
                 on_home = false;
@@ -374,12 +389,13 @@ function menu() {
                 on_controls = false;
                 on_developers = true;
             }
-        } else if (on_controls || on_developers || win) {
+        } else if (on_controls || on_developers || win || lose) {
             if (current_x > 0 && current_x < 200 && current_y > 0 && current_y < 75) {
                 on_home = true;
                 on_controls = false;
                 on_developers = false;
                 win = false;
+				lose = false;
             }
         }
     }
@@ -531,7 +547,6 @@ function checkCollision(direction) {
                     return true;
                 }
             }
-
         }
     }
 
@@ -574,10 +589,15 @@ function drawPlayer(ctx) {
 
 // Check if user gets to finish
 function checkFinish() {
-    if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE) {
+	if (time <= 0 && true != win){
+		lose = true;
+		on_menu = true;
+	}
+    else if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE) {
         win = true;
         on_menu = true;
     }
+	
 }
 
 // Reset Game for next player
@@ -585,7 +605,7 @@ function resetGame() {
     x = 0;
     y = 25;
     score = 0;
-    time = 180;
+    time = 5;
     for(var i = 0; i < coins.length; i++) {
         coins[i][2] = 1;
     }
