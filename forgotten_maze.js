@@ -5,7 +5,7 @@ var win = false;
 var lose = false;
 var x;
 var y;
-var start_time = 2;
+var start_time = 120;
 var WALL_SIZE = 2;
 
 // Timing variables
@@ -329,7 +329,6 @@ function menu() {
             forgotten_maze.context.fillText("Jerry Bui", 300, 275);
 
         } else if (win) {
-            highscore(score);
             // Background image
             forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
                 0, 0, canvas.width, canvas.height);
@@ -351,6 +350,7 @@ function menu() {
             forgotten_maze.context.font = "36px Arial";
             forgotten_maze.context.fillText("Your Score: ", 150, 200);
             forgotten_maze.context.fillText(score, 375, 200);
+
         } else if (lose) {
 			// Background image
 			forgotten_maze.context.drawImage(img, 0, 0, img.width, img.height,
@@ -366,7 +366,7 @@ function menu() {
 			forgotten_maze.context.fillRect(0, 0, 200, 75);
 			forgotten_maze.context.fillStyle = "#FFFFFF";
 			forgotten_maze.context.font = "36px Arial";
-			forgotten_maze.context.fillText("Return", 50, 50);
+            forgotten_maze.context.fillText("Return", 50, 50);
 		}
     }
 
@@ -395,7 +395,8 @@ function menu() {
                 on_controls = false;
                 on_developers = false;
                 win = false;
-				lose = false;
+                lose = false;
+                
             }
         }
     }
@@ -435,37 +436,37 @@ function checkKeyPressed(e) {
             case 37:
             case 65:
                 // left key pressed
-                x -= 5;
+                x -= 25;
                 playerRotation = 270;
                 if (checkCollision(0) == true) {
-                    x += 5;
+                    x += 25;
                 }
                 break;
             case 38:
             case 87:
                 // up key pressed
-                y -= 5;
+                y -= 25;
                 playerRotation = 0;
                 if (checkCollision(1) == true) {
-                    y += 5;
+                    y += 25;
                 }
                 break;
             case 39:
             case 68:
                 // right key pressed
-                x += 5;
+                x += 25;
                 playerRotation = 90;
                 if (checkCollision(2) == true) {
-                    x -= 5;
+                    x -= 25;
                 }
                 break;
             case 40:
             case 83:
                 // down key pressed
-                y += 5;
+                y += 25;
                 playerRotation = 180;
                 if (checkCollision(3) == true) {
-                    y -= 5;
+                    y -= 25;
                 }
                 break;  
         }
@@ -487,14 +488,14 @@ function checkCollision(direction) {
     middle_x = x + (GAME_SIZE/2);
     middle_y = y + (GAME_SIZE/2);
 
-    if (direction == 0) {
+    if (direction == 0) {   //left
         for (i = 0; i < walls_left.length; i++) {
             first_wall_x = walls_left[i][0];
             first_wall_y = walls_left[i][1];
             second_wall_x = walls_left[i][2];
             second_wall_y = walls_left[i][3];
 
-            if (first_wall_x > x && second_wall_x < second_x) {
+            if (first_wall_x > x && second_wall_x <= second_x) {
                 if ((first_wall_y > y && first_wall_y < second_y) || (second_wall_y > y && second_wall_y < second_y) || (first_wall_y == y && second_wall_y == second_y)) {
                     return true;
                 } else if (first_wall_y < middle_y && second_wall_y > middle_y) {
@@ -509,7 +510,7 @@ function checkCollision(direction) {
             second_wall_x = walls_right[i][2];
             second_wall_y = walls_right[i][3];
 
-            if (first_wall_x > x && second_wall_x < second_x) {
+            if (first_wall_x >= x && second_wall_x < second_x) {
                 if ((first_wall_y > y && first_wall_y < second_y) || (second_wall_y > y && second_wall_y < second_y) || (first_wall_y == y && second_wall_y == second_y)) {
                     return true;
                 } else if (first_wall_y < middle_y && second_wall_y > middle_y) {
@@ -524,7 +525,7 @@ function checkCollision(direction) {
             second_wall_x = walls_up[i][2];
             second_wall_y = walls_up[i][3];
 
-            if (first_wall_y > y && second_wall_y < second_y) {
+            if (first_wall_y > y && second_wall_y <= second_y) {
                 if ((first_wall_x > x && first_wall_x < second_x) || (second_wall_x > x && second_wall_x < second_x) || (first_wall_x == x && second_wall_x == second_x)) {
                     return true;
                 } else if (first_wall_x < middle_x && second_wall_x > middle_x) {
@@ -533,14 +534,14 @@ function checkCollision(direction) {
             }
 
         }
-    } else if (direction == 3) { // up
+    } else if (direction == 3) { // down
         for (i = 0; i < walls_down.length; i++) {
             first_wall_x = walls_down[i][0];
             first_wall_y = walls_down[i][1];
             second_wall_x = walls_down[i][2];
             second_wall_y = walls_down[i][3];
 
-            if (first_wall_y > y && second_wall_y < second_y) {
+            if (first_wall_y >= y && second_wall_y < second_y) {
                 if ((first_wall_x > x && first_wall_x < second_x) || (second_wall_x > x && second_wall_x < second_x) || (first_wall_x == x && second_wall_x == second_x)) {
                     return true;
                 } else if (first_wall_x < middle_x && second_wall_x > middle_x) {
@@ -577,23 +578,25 @@ function drawPlayer(ctx) {
     var player_right = document.getElementById("player_right");
 
     if (playerRotation == 0) {
-        ctx.drawImage(player_up, x, y, GAME_SIZE, GAME_SIZE);
+        ctx.drawImage(player_up, x, y, GAME_SIZE-1, GAME_SIZE-1);
     } else if (playerRotation == 90) {
-        ctx.drawImage(player_right, x, y, GAME_SIZE, GAME_SIZE);
+        ctx.drawImage(player_right, x, y, GAME_SIZE-1, GAME_SIZE-1);
     } else if (playerRotation == 180) {
-        ctx.drawImage(player_down, x, y, GAME_SIZE, GAME_SIZE);
+        ctx.drawImage(player_down, x, y, GAME_SIZE-1, GAME_SIZE-1);
     } else {
-        ctx.drawImage(player_left, x, y, GAME_SIZE, GAME_SIZE);
+        ctx.drawImage(player_left, x, y, GAME_SIZE-1, GAME_SIZE-1);
     }
 }
 
 // Check if user gets to finish
 function checkFinish() {
-	if (time <= 0 && true != win){
+	if (time <= 0 && win == false){
+        highscore(0);
 		lose = true;
 		on_menu = true;
 	}
     else if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE) {
+        highscore(score);
         win = true;
         on_menu = true;
     }
@@ -605,7 +608,7 @@ function resetGame() {
     x = 0;
     y = 25;
     score = 0;
-    time = 5;
+    time = start_time;
     for(var i = 0; i < coins.length; i++) {
         coins[i][2] = 1;
     }
