@@ -24,5 +24,12 @@ The player will win the game if they are able to escape the maze before time run
 Scoring Mechanism:
 The player will get 100 points for every collected coin and 10 points for every second remaining on the timer once they exit the maze.
 
-Additional Features:
-The maze will incorporate a monster that will seek out the player. If the player runs into the monster, it will result in an immediate loss.
+CSS3 Features:
+- Gradient for the background of the canvas
+- Fade in for the canvas
+- Animation for the title of the game (moves from left to right to center in 4s)
+
+Nifty Features:
+- Creation of the maze using depth first search algorithm
+- Collision of units for player and walls made inside of the maze as well as the surrounding canvas.
+- Time Score and Coin Collection Score
