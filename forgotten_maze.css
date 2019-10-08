@@ -1,6 +1,7 @@
 body {
 	background-image: linear-gradient(rgb(163, 140, 226), rgb(16, 5, 48));
 	color: #246A73;
+	width: 100%;
 }
 
 footer {
@@ -31,9 +32,10 @@ img {
 	100%  {left:40%;}
   }
 
-  h1 {
+  header {
 	position: relative;
-	left:40%;
+	left: 40%;
+	width:40%;
 	animation-name: example;
 	animation-duration: 3s;
   }
