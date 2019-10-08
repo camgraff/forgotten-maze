@@ -33,3 +33,6 @@ Nifty Features:
 - Creation of the maze using depth first search algorithm
 - Collision of units for player and walls made inside of the maze as well as the surrounding canvas.
 - Time Score and Coin Collection Score
+
+Why We Deserve 100:
+For this project, our group believes we have met all requirements for the project game. We have also added additional features that make our game unique as well as the playing style where arrow and WASD work interchangibly. 
