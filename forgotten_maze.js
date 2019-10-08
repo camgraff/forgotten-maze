@@ -21,7 +21,8 @@ var walls_up = [];
 var walls_down = [];
 var coins = [];
 var playerRotation = 0;
-
+var time_score = 0;
+var coin_score = 0;
 
 window.onload = function() {
     update_scores();
@@ -345,11 +346,23 @@ function menu() {
             forgotten_maze.context.font = "36px Arial";
             forgotten_maze.context.fillText("Return", 50, 50);
 
+			// Score from Collected Coins:
+			forgotten_maze.context.fillStyle = "#FFFFFF";
+            forgotten_maze.context.font = "36px Arial";
+            forgotten_maze.context.fillText("Coin Score: ", 200, 200);
+            forgotten_maze.context.fillText(coin_score, 450, 200);
+			
+			// Score from Time
+			forgotten_maze.context.fillStyle = "#FFFFFF";
+            forgotten_maze.context.font = "36px Arial";
+            forgotten_maze.context.fillText("Time Score: ", 200, 300);
+            forgotten_maze.context.fillText(time_score, 450, 300);
+			
             // Score Description
             forgotten_maze.context.fillStyle = "#FFFFFF";
             forgotten_maze.context.font = "36px Arial";
-            forgotten_maze.context.fillText("Your Score: ", 150, 200);
-            forgotten_maze.context.fillText(score, 375, 200);
+            forgotten_maze.context.fillText("Final Score: ", 200, 400);
+            forgotten_maze.context.fillText(score, 450, 400);
 
         } else if (lose) {
 			// Background image
@@ -596,6 +609,9 @@ function checkFinish() {
 		on_menu = true;
 	}
     else if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE) {
+		time_score = time * 10;
+		coin_score = score;
+		score = score + time_score;
         highscore(score);
         win = true;
         on_menu = true;
