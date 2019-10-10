@@ -150,7 +150,7 @@ function createMaze(){
             cells[i][j] = [0,0,0,0];        //[0,0,0,0] indicates all walls around the cell are present
             visited[i][j] = false;
             var random_number = Math.floor(Math.random() * 10);
-            if (random_number > 9 && i != xMax - 1 && j != yMax) {
+            if (random_number > 8 && i != xMax - 1 && j != yMax) {
                 coins.push([i * GAME_SIZE,(j+1) * GAME_SIZE, 1]);
             }
         }
