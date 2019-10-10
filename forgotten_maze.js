@@ -301,11 +301,11 @@ function menu() {
             // Control Description
             forgotten_maze.context.fillStyle = "#FFFFFF";
             forgotten_maze.context.font = "36px Arial";
-            forgotten_maze.context.fillText("Up Arrow/W - Move character up", 100, 200);
-            forgotten_maze.context.fillText("Down Arrow/S - Move character down", 100, 250);
-            forgotten_maze.context.fillText("Left Arrow/A - Move character left", 100, 300);
-            forgotten_maze.context.fillText("Right Arrow/D - Move character right", 100, 350);
-            forgotten_maze.context.fillText("Esc - Go to Main Menu (will pause the game)", 100, 400);
+            forgotten_maze.context.fillText("W - Move character up", 170, 200);
+            forgotten_maze.context.fillText("S - Move character down", 170, 250);
+            forgotten_maze.context.fillText("A - Move character left", 170, 300);
+            forgotten_maze.context.fillText("D - Move character right", 170, 350);
+            forgotten_maze.context.fillText("Esc - Go to Main Menu", 170, 400);
 
         } else if (on_developers) {
 
@@ -449,7 +449,7 @@ function checkKeyPressed(e) {
         switch(e.keyCode) {
             case 27:
                 on_menu = true;
-            case 37:
+            // case 37:
             case 65:
                 // left key pressed
                 x -= 25;
@@ -458,7 +458,7 @@ function checkKeyPressed(e) {
                     x += 25;
                 }
                 break;
-            case 38:
+            // case 38:
             case 87:
                 // up key pressed
                 y -= 25;
@@ -467,7 +467,7 @@ function checkKeyPressed(e) {
                     y += 25;
                 }
                 break;
-            case 39:
+            // case 39:
             case 68:
                 // right key pressed
                 x += 25;
@@ -476,7 +476,7 @@ function checkKeyPressed(e) {
                     x -= 25;
                 }
                 break;
-            case 40:
+            // case 40:
             case 83:
                 // down key pressed
                 y += 25;
@@ -606,7 +606,11 @@ function drawPlayer(ctx) {
 
 // Check if user gets to finish
 function checkFinish() {
+<<<<<<< HEAD
 	if (time <= 0 && win == false && lose == false && on_menu == false){
+=======
+	if (time <= 1 && win == false){
+>>>>>>> cc5e33d86d0ef29af81f9e6ec871e1e5628bbc08
         highscore(0);
 		lose = true;
 		on_menu = true;
