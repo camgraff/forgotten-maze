@@ -603,7 +603,7 @@ function drawPlayer(ctx) {
 
 // Check if user gets to finish
 function checkFinish() {
-	if (time <= 0 && win == false){
+	if (time <= 1 && win == false){
         highscore(0);
 		lose = true;
 		on_menu = true;
