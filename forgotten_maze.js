@@ -44,7 +44,10 @@ function startGame() {
 var forgotten_maze = {
     setup : function() {
         this.context = canvas.getContext("2d");
-        this.interval = setInterval(redrawGame, 20);
+        this.interval = setInterval(function() {
+            redrawGame();
+            checkFinish();
+        }, 20);
         boardCells = createMaze();
     },
     clear : function() {
@@ -442,7 +445,7 @@ function redrawGame() {
 // Function to check key press
 function checkKeyPressed(e) {
     if (!on_menu) {
-        checkFinish();
+        //checkFinish();
         switch(e.keyCode) {
             case 27:
                 on_menu = true;
@@ -603,20 +606,19 @@ function drawPlayer(ctx) {
 
 // Check if user gets to finish
 function checkFinish() {
-	if (time <= 0 && win == false){
+	if (time <= 0 && win == false && lose == false && on_menu == false){
         highscore(0);
 		lose = true;
 		on_menu = true;
 	}
-    else if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE) {
+    else if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE && win == false) {
 		time_score = time * 10;
 		coin_score = score;
 		score = score + time_score;
         highscore(score);
         win = true;
         on_menu = true;
-    }
-	
+    }	
 }
 
 // Reset Game for next player
