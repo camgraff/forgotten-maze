@@ -611,7 +611,7 @@ function checkFinish() {
 		lose = true;
 		on_menu = true;
 	}
-    else if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE && win == false) {
+    else if (x == canvas.width - GAME_SIZE && y == canvas.height - GAME_SIZE && win == false && on_menu == false) {
 		time_score = time * 10;
 		coin_score = score;
 		score = score + time_score;
