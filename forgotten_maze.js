@@ -211,7 +211,7 @@ setInterval(function timing() {
     var min_left = "";
     var sec_left = "";
 
-    if(time > 0){
+    if(time >= 0){
         var min = Math.floor(time / 60);
         var sec = time % 60;
 
@@ -449,7 +449,6 @@ function checkKeyPressed(e) {
         switch(e.keyCode) {
             case 27:
                 on_menu = true;
-            case 37:
             case 65:
                 // left key pressed
                 x -= 25;
@@ -458,7 +457,6 @@ function checkKeyPressed(e) {
                     x += 25;
                 }
                 break;
-            case 38:
             case 87:
                 // up key pressed
                 y -= 25;
@@ -467,7 +465,6 @@ function checkKeyPressed(e) {
                     y += 25;
                 }
                 break;
-            case 39:
             case 68:
                 // right key pressed
                 x += 25;
@@ -476,7 +473,6 @@ function checkKeyPressed(e) {
                     x -= 25;
                 }
                 break;
-            case 40:
             case 83:
                 // down key pressed
                 y += 25;
@@ -606,7 +602,7 @@ function drawPlayer(ctx) {
 
 // Check if user gets to finish
 function checkFinish() {
-	if (time <= 0 && win == false && lose == false && on_menu == false){
+	if (time < 0 && win == false && lose == false && on_menu == false){
         highscore(0);
 		lose = true;
 		on_menu = true;
