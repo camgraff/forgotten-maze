@@ -301,11 +301,12 @@ function menu() {
             // Control Description
             forgotten_maze.context.fillStyle = "#FFFFFF";
             forgotten_maze.context.font = "36px Arial";
-            forgotten_maze.context.fillText("Up Arrow/W - Move character up", 100, 200);
-            forgotten_maze.context.fillText("Down Arrow/S - Move character down", 100, 250);
-            forgotten_maze.context.fillText("Left Arrow/A - Move character left", 100, 300);
-            forgotten_maze.context.fillText("Right Arrow/D - Move character right", 100, 350);
-            forgotten_maze.context.fillText("Esc - Go to Main Menu (will pause the game)", 100, 400);
+            forgotten_maze.context.fillText("W - Move character up", 20, 200);
+            forgotten_maze.context.fillText("S - Move character down", 20, 250);
+            forgotten_maze.context.fillText("A - Move character left", 20, 300);
+            forgotten_maze.context.fillText("D - Move character right", 20, 350);
+            forgotten_maze.context.fillText("Esc - Go to Main Menu (will pause the game)", 20, 400);
+
 
         } else if (on_developers) {
 
