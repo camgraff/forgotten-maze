@@ -35,4 +35,4 @@ Nifty Features:
 - Time Score and Coin Collection Score
 
 Why We Deserve 100:
-For this project, our group believes we have met all requirements for the project game. We have also added additional features that make our game unique as well as the playing style where arrow and WASD work interchangibly. We have made sure that our documents fulfill the guidelines of HTML5, CSS3, and accessibility.
+For this project, our group believes we have met all requirements for the project game. We have also added additional features that make our game unique as well as the playing style where WASD work. We have made sure that our documents fulfill the guidelines of HTML5, CSS3, and accessibility.
