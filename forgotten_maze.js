@@ -25,7 +25,7 @@ var time_score = 0;
 var coin_score = 0;
 
 window.onload = function() {
-    update_scores();
+    //update_scores();
     canvas = document.getElementById("forgotten_maze");
     startGame();
 };
@@ -604,7 +604,7 @@ function drawPlayer(ctx) {
 // Check if user gets to finish
 function checkFinish() {
 	if (time < 0 && win == false && lose == false && on_menu == false){
-        highscore(0);
+        //highscore(0);
 		lose = true;
 		on_menu = true;
 	}
@@ -612,7 +612,7 @@ function checkFinish() {
 		time_score = time * 10;
 		coin_score = score;
 		score = score + time_score;
-        highscore(score);
+        //highscore(score);
         win = true;
         on_menu = true;
     }	
